@@ -30,3 +30,7 @@ PetalFairyApi/appsettings.Development.json
 # Build output
 PetalFairyApi/bin/
 PetalFairyApi/obj/
+
+.env
+.env.local
+.env.*

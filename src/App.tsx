@@ -1,3 +1,4 @@
+import { supabase } from "./supabase"
 import {
   ChangeEvent,
   DragEvent,
@@ -275,6 +276,7 @@ export default function App() {
   }
 
   
+
 const submit = async (event: FormEvent) => {
   event.preventDefault()
 
@@ -312,8 +314,33 @@ const submit = async (event: FormEvent) => {
 
   if (Object.keys(nextErrors).length > 0) return
 
-  setSubmitted(true)
-  window.scrollTo({ top: 0, behavior: "smooth" })
+  try {
+    const { error } = await supabase
+      .from("payments")
+      .insert([
+        {
+          customer_name: form.fullName,
+          amount: amount,
+          payment_method: form.paymentMethod,
+          reference_number: form.reference,
+          status: "pending",
+        },
+      ])
+
+    if (error) throw error
+
+    setSubmitted(true)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+
+  } catch (error) {
+    console.error("Supabase submission error:", error)
+
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Unable to save payment."
+    )
+  }
 }
 
   const resetForm = () => {
