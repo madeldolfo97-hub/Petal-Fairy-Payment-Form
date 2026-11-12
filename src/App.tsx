@@ -274,7 +274,8 @@ export default function App() {
     setFile(event.dataTransfer.files[0])
   }
 
-  const submit = async (event: FormEvent) => {
+  
+const submit = async (event: FormEvent) => {
   event.preventDefault()
 
   const nextErrors: Record<string, string> = {}
@@ -293,9 +294,13 @@ export default function App() {
     if (!String(form[key]).trim()) nextErrors[key] = message
   })
 
-  if (!receipt) nextErrors.receipt = "Please attach your proof of payment."
-  if (!form.confirmed)
+  if (!receipt) {
+    nextErrors.receipt = "Please attach your proof of payment."
+  }
+
+  if (!form.confirmed) {
     nextErrors.confirmed = "Please confirm your information."
+  }
 
   const amount = Number(form.amountPaid.replace(/[₱,\s]/g, ""))
 
@@ -307,39 +312,8 @@ export default function App() {
 
   if (Object.keys(nextErrors).length > 0) return
 
-  try {
-    const response = await fetch(
-  "http://localhost:5176/api/payments/submit",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      customerName: form.fullName,
-      contact: form.contact,
-      amount: amount,
-      paymentMethod: form.paymentMethod,
-      referenceNumber: form.reference,
-    }),
-  }
-);
-
-const result = await response.json();
-
-if (!response.ok || !result.success) {
-  throw new Error(result.message || "Payment submission failed.");
-}
-
-setSubmitted(true);
-window.scrollTo({ top: 0, behavior: "smooth" });
-  } catch (error) {
-    alert(
-      error instanceof Error
-        ? error.message
-        : "Unable to submit payment."
-    )
-  }
+  setSubmitted(true)
+  window.scrollTo({ top: 0, behavior: "smooth" })
 }
 
   const resetForm = () => {
