@@ -1,0 +1,10 @@
+{
+  "description": "A responsive payment form for Petal Fairy customers to submit order details, payment information, and receipt uploads with clear validation and confirmation.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
